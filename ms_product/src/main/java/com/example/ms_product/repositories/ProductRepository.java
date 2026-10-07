@@ -1,6 +1,6 @@
 package com.example.ms_product.repositories;
 
-import com.example.ms_product.ProductStatus;
+import com.example.ms_product.enums.ProductStatus;
 import com.example.ms_product.models.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,6 @@
 package com.example.ms_product.models;
 
-import com.example.ms_product.ProductStatus;
+import com.example.ms_product.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
