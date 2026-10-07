@@ -1,1 +1,94 @@
-<p>product-form works!</p>
+<div class="p-6 max-w-2xl mx-auto">
+  <h1 class="text-2xl font-bold text-slate-900 mb-6">
+    {{ isEdit() ? 'Editar produto' : 'Novo produto' }}
+  </h1>
+
+  <form
+    (submit)="onSubmit(); $event.preventDefault()"
+    class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <div class="md:col-span-2">
+      <label class="block mb-1.5 text-sm font-medium text-slate-700">Nome</label>
+      <input
+        [formField]="productForm.name"
+        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder:text-slate-400 transition-all focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+        [class.border-red-500]="productForm.name().invalid() && productForm.name().touched()"
+      />
+      @if (productForm.name().touched() && productForm.name().errors().length) {
+        @for (err of productForm.name().errors(); track err.kind) {
+          <p class="mt-1.5 text-xs text-red-600">{{ err.message }}</p>
+        }
+      }
+    </div>
+
+    <div class="md:col-span-2">
+      <label class="block mb-1.5 text-sm font-medium text-slate-700">Descrição</label>
+      <textarea
+        [formField]="productForm.description"
+        rows="3"
+        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 placeholder:text-slate-400 transition-all focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20">
+      </textarea>
+      @if (productForm.description().touched() && productForm.description().errors().length) {
+        @for (err of productForm.description().errors(); track err.kind) {
+          <p class="mt-1.5 text-xs text-red-600">{{ err.message }}</p>
+        }
+      }
+    </div>
+
+    <div>
+      <label class="block mb-1.5 text-sm font-medium text-slate-700">Preço (R$)</label>
+      <input
+        type="number"
+        step="0.01"
+        [formField]="productForm.price"
+        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 transition-all focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+        [class.border-red-500]="productForm.price().invalid() && productForm.price().touched()"
+      />
+      @if (productForm.price().touched() && productForm.price().errors().length) {
+        @for (err of productForm.price().errors(); track err.kind) {
+          <p class="mt-1.5 text-xs text-red-600">{{ err.message }}</p>
+        }
+      }
+    </div>
+
+    <div>
+      <label class="block mb-1.5 text-sm font-medium text-slate-700">Categoria</label>
+      <input
+        [formField]="productForm.category"
+        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 transition-all focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+        [class.border-red-500]="productForm.category().invalid() && productForm.category().touched()"
+      />
+      @if (productForm.category().touched() && productForm.category().errors().length) {
+        @for (err of productForm.category().errors(); track err.kind) {
+          <p class="mt-1.5 text-xs text-red-600">{{ err.message }}</p>
+        }
+      }
+    </div>
+
+    <div>
+      <label class="block mb-1.5 text-sm font-medium text-slate-700">Status</label>
+      <select
+        [formField]="productForm.status"
+        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-900 transition-all focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20">
+        @for (status of statuses; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="md:col-span-2 flex justify-end gap-3 pt-2">
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="inline-flex items-center justify-center rounded-lg px-4 py-2.5 font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2">
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        [disabled]="isPending()"
+        class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2.5 font-medium text-white shadow-sm transition-all hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed">
+        {{ isPending() ? 'Salvando...' : 'Salvar' }}
+      </button>
+    </div>
+  </form>
+</div>
