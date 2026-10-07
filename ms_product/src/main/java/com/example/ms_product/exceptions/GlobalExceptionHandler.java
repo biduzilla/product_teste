@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -33,11 +34,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest req) {
-        Map<String, String> fields = ex.getBindingResult().getFieldErrors().stream()
-                .collect(Collectors.toMap(
-                        FieldError::getField,
-                        e -> e.getDefaultMessage() == null ? "valor inválido" : e.getDefaultMessage()
-                ));
+        Map<String, String> fields = new HashMap<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            fields.putIfAbsent(error.getField(), error.getDefaultMessage());
+        }
         log.warn("Validação falhou: {}", fields);
         return build(HttpStatus.UNPROCESSABLE_CONTENT, "Validação falhou", req, fields);
     }

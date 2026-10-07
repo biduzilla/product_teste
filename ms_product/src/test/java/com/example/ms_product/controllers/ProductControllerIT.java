@@ -2,7 +2,7 @@ package com.example.ms_product.controllers;
 
 import com.example.ms_product.dtos.ProductRequest;
 import com.example.ms_product.enums.ProductStatus;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -36,7 +36,7 @@ class ProductControllerIT {
     }
 
     @Autowired MockMvc mvc;
-    @Autowired ObjectMapper json;
+    @Autowired JsonMapper json;
 
     @Test
     void deveCriarEBuscarProduto() throws Exception {
