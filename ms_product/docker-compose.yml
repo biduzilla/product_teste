@@ -1,0 +1,78 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.153.0
+    container_name: otel_collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8889:8889"   # Prometheus exporter (métricas do Collector)
+    networks:
+      - api_network
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.76.0
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686" # Jaeger UI
+    networks:
+      - api_network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: catalogo_postgres
+    environment:
+      POSTGRES_DB: catalogo
+      POSTGRES_USER: catalogo
+      POSTGRES_PASSWORD: catalogo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_catalogo_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - api_network
+
+  prometheus:
+    image: prom/prometheus:v3.15.0
+    container_name: catalogo_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_catalogo_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - "9090:9090"
+    networks:
+      - api_network
+
+  grafana:
+    image: grafana/grafana:13.2.2
+    container_name: catalogo_grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_catalogo_data:/var/lib/grafana
+      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - api_network
+
+volumes:
+  postgres_catalogo_data:
+  prometheus_catalogo_data:
+  grafana_catalogo_data:
+
+networks:
+  api_network:
+    driver: bridge
