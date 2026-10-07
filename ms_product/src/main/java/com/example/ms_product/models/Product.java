@@ -2,8 +2,7 @@ package com.example.ms_product.models;
 
 import com.example.ms_product.ProductStatus;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -12,7 +11,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "products")
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
