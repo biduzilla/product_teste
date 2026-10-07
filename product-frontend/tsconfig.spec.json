@@ -10,5 +10,5 @@
   "include": [
     "src/**/*.d.ts",
     "src/**/*.spec.ts"
-  ]
+, "src/app/features/products/product-form/product-form.spec.component.ts"  ]
 }

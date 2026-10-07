@@ -16,8 +16,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
     MatSnackBarModule,
   ],
   selector: 'app-product-list',
-  styleUrl: './product-list.css',
-  templateUrl: './product-list.html',
+  templateUrl: './product-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductListComponent {

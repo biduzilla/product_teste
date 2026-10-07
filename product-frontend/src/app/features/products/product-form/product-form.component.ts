@@ -17,7 +17,7 @@ interface ProductFormData {
   selector: 'app-product-form',
   standalone: true,
   imports: [FormField],
-  templateUrl: './product-form.html',
+  templateUrl: './product-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductFormComponent {
