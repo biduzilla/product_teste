@@ -1,24 +1,14 @@
 services:
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.153.0
-    container_name: otel_collector
+    image: otel/opentelemetry-collector-contrib:0.103.0
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
-      - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP
-      - "8889:8889"   # Prometheus exporter (métricas do Collector)
-    networks:
-      - api_network
-
-  jaeger:
-    image: jaegertracing/all-in-one:1.76.0
-    container_name: jaeger
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-    ports:
-      - "16686:16686" # Jaeger UI
+      - "4317:4317"
+      - "4318:4318"
+      - "8888:8888"
+      - "8889:8889"
     networks:
       - api_network
 
@@ -48,6 +38,17 @@ services:
       - '--storage.tsdb.path=/prometheus'
     ports:
       - "9090:9090"
+    networks:
+      - api_network
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - COLLECTOR_OTLP_GRPC_PORT=4317
+      - COLLECTOR_OTLP_HTTP_PORT=4318
+    ports:
+      - "16686:16686"
     networks:
       - api_network
 

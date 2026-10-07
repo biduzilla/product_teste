@@ -17,12 +17,12 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     Optional<Product> findByIdAndDeletedFalse(UUID id);
 
     @Query("""
-                select p from product p
-                where p.deleted = false
-                    and (:category is null or p.category is :category)
-                    and (:status is null or p.status =status)
-                    and (:name is null or lower(p.name) like lower(concat('%',:name,'%'))
-            """)
+        select p from Product p
+        where p.deleted = false
+            and (:category is null or p.category = :category)
+            and (:status is null or p.status = :status)
+            and (:name is null or lower(p.name) like lower(concat('%', cast(:name as text), '%')))
+        """)
     Page<Product> search(
             @Param("category") String category,
             @Param("status") ProductStatus status,
